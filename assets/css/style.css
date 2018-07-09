@@ -5,5 +5,32 @@ html{
     margin-left:5%;
 }
 svg{
-    background: white;
+    background: #f0f0f0;
+    color:#666666;
+}
+article{
+    white-space: pre-wrap;
+}
+
+/* Graph display*/
+rect{
+    fill:gray;
+}
+.專業人員{
+    fill:darkcyan;
+}
+.技術員及助理專業人員{
+    fill:darkgreen;
+}
+.事務支援人員{
+    fill:darkgoldenrod;
+}
+.技藝、機械設備操作及組裝人員{
+    fill:darkmagenta;
+}
+.服務及銷售工作人員{
+    fill:darksalmon;
+}
+.基層技術工及勞力工{
+    fill:darkred;
 }

@@ -5,7 +5,7 @@ let Setting={
         height:600,
         margin:{
             top: 50,
-            right: 75,
+            right: 0,
             bottom: 75,
             left: 50
         },
@@ -14,6 +14,5 @@ let Setting={
         x:20,
         y:40,
     }
-
     
 }
