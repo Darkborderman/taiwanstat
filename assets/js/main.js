@@ -12,7 +12,7 @@ let graph=svg.append("g")
     .attr("transform", "translate(" + Setting.graph.margin.left + "," + Setting.graph.margin.top + ")");
 
 //load json
-d3.json("/assets/json/initial_staff_wage.json", function (error, data) {
+d3.json("assets/json/initial_staff_wage.json", function (error, data) {
 
 
     if (error) throw error;
