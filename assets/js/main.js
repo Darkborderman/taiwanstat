@@ -8,17 +8,14 @@ let svg = d3.select(Setting.graph.name).append(`svg`)
 let width=Setting.graph.width-Setting.graph.margin.left-Setting.graph.margin.right;
 let height=Setting.graph.height-Setting.graph.margin.top-Setting.graph.margin.bottom;
 
-    let graph=svg.append(`g`)
-    .attr(`transform`, `translate(` + Setting.graph.margin.left + `,` + Setting.graph.margin.top + `)`);
+let graph=svg.append(`g`)
+.attr(`transform`, `translate(` + Setting.graph.margin.left + `,` + Setting.graph.margin.top + `)`);
 
 //load csv
 d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/total-2.csv`, function (error, data) {
 
     if (error) throw error;
     else console.log(data);
-
-    //TODO data should be split 11 as a array element
-
 
     //Y-axis
 
@@ -49,45 +46,70 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
 
     //Data insert
 
-    graph.append('g')
-    .attr('class','dot graph')
-    .selectAll(`bar`)
+    graph.append(`g`)
+    .attr(`class`,`dot graph`)
+    .selectAll(`circle`)
     .data(data)
     .enter()
-    .append(`rect`)
-    .style(`opacity`,0.7)
-    .attr(`width`,7)
-    .attr(`height`,7)
-    .attr(`x`,(d)=>{return x(d[`year`]);})
-    .attr(`y`,(d)=>{return y(d[`value`]);})
+    .append(`circle`)
+    .attr('r',Setting.circle.radius)
+    .attr(`fill`,`lightgray`)
+    .attr(`cx`,(d)=>{return x(d[`year`]);})
+    .attr(`cy`,(d)=>{return y(d[`value`]);})
     .attr(`class`,(d)=>{
         return `${d[`year`]} ${d[`type`]}`;
+    })
+    .on(`mouseenter`,(d)=>{
+        console.log(d);
+        d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
+    })
+    .on('mouseleave',(d)=>{
+        d3.select(d3.event.target).attr('r',Setting.circle.radius);
+    })
+    .on(`click`,(d)=>{
+        
+        DescriptionGenerate(d,data.slice(0,6));
     });
 
-    //draw line
+    //format data for line
 
     let valueline = d3.line()
     .x(function(d) { return x(d[`year`]); })
     .y(function(d) { return y(d[`value`]); });
 
     let lineData=[];
-
     for(let i=0;i<=11;i++)
     lineData[i]=data.slice(i*6,(i*6)+6);
 
-    console.log(lineData);
-
-  
-    // define the line
+    // draw line
     for(let i=0;i<=11;i++)
     {
-        graph.append("g")
-        .attr('clas','line graph')
+        graph.append(`g`)
+        .attr(`clas`,`line graph`)
         .data([lineData[i]])
-        .append('path')
-        .attr('stroke','red')
-        .attr('fill','none')
-        .attr('stroke-width','2px')
-        .attr('d',valueline)
+        .append(`path`)
+        .attr(`class`,(d)=>{
+            return `${d[0][`type`]} line`;
+        })
+        .attr("fill","none")
+        .attr(`d`,valueline)
     }
+    
+    //Add total chart
 });
+
+function DescriptionGenerate(d,sampleNumber){
+    console.log(d['year']);
+    console.log(sampleNumber);
+    for(data in sampleNumber){
+        if(sampleNumber[data]['year']==d['year'])
+        {
+            document.getElementById("total").innerText=sampleNumber[data][`value`];
+        }
+    }
+
+    document.getElementById("year").innerText=d['year'];
+    document.getElementById("type").innerText=d['type'];
+    document.getElementById("value").innerText=d['value'];
+
+}
