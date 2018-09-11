@@ -108,8 +108,8 @@ function DescriptionGenerate(d,sampleNumber){
         }
     }
 
-    document.getElementById("year").innerText=d['year'];
-    document.getElementById("type").innerText=d['type'];
-    document.getElementById("value").innerText=d['value'];
+    document.getElementById("year").innerText=`年份: ${d['year']}`;
+    document.getElementById("type").innerText=`考慮因素: ${d['type']}`;
+    document.getElementById("value").innerText=`所佔比率: ${d['value']}`;
 
 }
