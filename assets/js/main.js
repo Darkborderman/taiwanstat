@@ -14,35 +14,12 @@ let graph=svg.append(`g`)
 //load csv
 d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/total-2.csv`, function (error, data) {
 
+
     if (error) throw error;
     else console.log(data);
 
-    //Y-axis
-
-    let y=d3.scaleLinear().domain([0,80]).range([height,0]);
-
-    graph.append(`g`)
-    .attr(`class`, `y axis`)
-    .call(d3.axisLeft(y));
-
-    graph.append(`g`)
-    .attr(`class`, `y unit`)
-    .append(`text`)
-    .attr(`y`, -10)
-    .attr(`x`, -50)
-    .text(`比率(%)`);
-
-    //X-axis
-
-    let x=d3.scaleLinear().domain([2005,2017]).range([0,width]);
-
-    graph.append(`g`)
-        .attr(`class`, `x axis`)
-        .attr(`transform`, `translate(0,` + height + `)`)
-        .call(d3.axisBottom(x))
-        .selectAll(`text`)
-            .attr(`x`,0)
-            .attr(`y`,20)
+    let x=generateXAxis(graph,data,width,'年份');
+    let y=generateYAxis(graph,data,height,'比率(%)');
 
     //Data insert
 
@@ -67,8 +44,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         d3.select(d3.event.target).attr('r',Setting.circle.radius);
     })
     .on(`click`,(d)=>{
-        
-        DescriptionGenerate(d,data.slice(0,6));
+        generateDescription(d);
     });
 
     //format data for line
@@ -82,7 +58,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     lineData[i]=data.slice(i*6,(i*6)+6);
 
     // draw line
-    for(let i=0;i<=11;i++)
+    for(let i=0;i<=10;i++)
     {
         graph.append(`g`)
         .attr(`clas`,`line graph`)
@@ -98,18 +74,54 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     //Add total chart
 });
 
-function DescriptionGenerate(d,sampleNumber){
-    console.log(d['year']);
-    console.log(sampleNumber);
-    for(data in sampleNumber){
-        if(sampleNumber[data]['year']==d['year'])
-        {
-            document.getElementById("total").innerText=sampleNumber[data][`value`];
-        }
-    }
+function generateDescription(d){
 
     document.getElementById("year").innerText=`年份: ${d['year']}`;
     document.getElementById("type").innerText=`考慮因素: ${d['type']}`;
     document.getElementById("value").innerText=`所佔比率: ${d['value']}`;
 
 }
+
+function generateYAxis(graph,data,height,unit){
+    
+    let max= Math.max.apply(Math, data.map(function(o) { return o['value']; }))
+    let min= Math.min.apply(Math, data.map(function(o) { return o['value']; }))
+
+    let y=d3.scaleLinear().domain([min,max]).range([height,0]);
+
+    graph.append(`g`)
+        .attr(`class`, `y axis`)
+        .call(d3.axisLeft(y));
+
+    graph.append(`g`)
+        .attr(`class`, `y unit`)
+        .append(`text`)
+        .attr(`y`, -10)
+        .attr(`x`, -50)
+        .text(`${unit}`);
+    
+    return y;
+}
+
+function generateXAxis(graph,data,width,unit){
+
+    let max= Math.max.apply(Math, data.map(function(o) { return o['year']; }))
+    let min= Math.min.apply(Math, data.map(function(o) { return o['year']; }))
+
+    let x=d3.scaleLinear().domain([min,max]).range([0,width-10]);
+
+    graph.append(`g`)
+        .attr(`class`, `x axis`)
+        .attr(`transform`, `translate(0,` + height + `)`)
+        .call(d3.axisBottom(x));
+
+    graph.append(`g`)
+        .attr(`class`, `x unit`)
+        .append(`text`)
+        .attr(`y`, 310)
+        .attr(`x`, 710)
+        .text(`${unit}`);
+
+    return x;
+}
+
