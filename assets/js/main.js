@@ -1,61 +1,50 @@
-
-//Create a svg and append to div element
-let svg = d3.select(Setting.graph.name).append(`svg`)
-    .attr(`width`, Setting.graph.width)
-    .attr(`height`, Setting.graph.height)
-
-//inner graph
-let width=Setting.graph.width-Setting.graph.margin.left-Setting.graph.margin.right;
-let height=Setting.graph.height-Setting.graph.margin.top-Setting.graph.margin.bottom;
-
-let graph=svg.append(`g`)
-.attr(`transform`, `translate(` + Setting.graph.margin.left + `,` + Setting.graph.margin.top + `)`);
-
-//load csv
 d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/total-2.csv`, function (error, data) {
-
 
     if (error) throw error;
     else console.log(data);
 
-    let x=generateXAxis(graph,data,width,'年份');
+    let graph=generateGraph(Setting.graph1);
+
+    let width=Setting.graph1.innerWidth();
+    let height=Setting.graph1.innerHeight();
+
+    let x=generateXAxis(graph,data,width,height,'年份');
     let y=generateYAxis(graph,data,height,'比率(%)');
 
-    //Data insert
+    //insert data(dot graph)
 
     graph.append(`g`)
-    .attr(`class`,`dot graph`)
-    .selectAll(`circle`)
-    .data(data)
-    .enter()
-    .append(`circle`)
-    .attr('r',Setting.circle.radius)
-    .attr(`fill`,`lightgray`)
-    .attr(`cx`,(d)=>{return x(d[`year`]);})
-    .attr(`cy`,(d)=>{return y(d[`value`]);})
-    .attr(`class`,(d)=>{
-        return `${d[`year`]} ${d[`type`]}`;
-    })
-    .on(`mouseenter`,(d)=>{
-        console.log(d);
-        d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
-    })
-    .on('mouseleave',(d)=>{
-        d3.select(d3.event.target).attr('r',Setting.circle.radius);
-    })
-    .on(`click`,(d)=>{
-        generateDescription(d);
-    });
+        .attr(`class`,`dot graph`)
+        .selectAll(`circle`)
+        .data(data)
+        .enter()
+        .append(`circle`)
+        .attr('r',Setting.circle.radius)
+        .attr(`fill`,`lightgray`)
+        .attr(`cx`,(d)=>{return x(d[`year`]);})
+        .attr(`cy`,(d)=>{return y(d[`value`]);})
+        .attr(`class`,(d)=>{
+            return `${d[`year`]} ${d[`type`]}`;
+        })
+        .on(`mouseenter`,(d)=>{
+            console.log(d);
+            d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
+        })
+        .on('mouseleave',(d)=>{
+            d3.select(d3.event.target).attr('r',Setting.circle.radius);
+        })
+        .on(`click`,(d)=>{
+            generateDescription(d);
+        });
 
     //format data for line
 
     let valueline = d3.line()
-    .x(function(d) { return x(d[`year`]); })
-    .y(function(d) { return y(d[`value`]); });
+        .x(function(d) { return x(d[`year`]); })
+        .y(function(d) { return y(d[`value`]); });
 
     let lineData=[];
-    for(let i=0;i<=11;i++)
-    lineData[i]=data.slice(i*6,(i*6)+6);
+    for(let i=0;i<=11;i++) lineData[i]=data.slice(i*6,(i*6)+6);
 
     // draw line
     for(let i=0;i<=10;i++)
@@ -68,10 +57,9 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             return `${d[0][`type`]} line`;
         })
         .attr("fill","none")
-        .attr(`d`,valueline)
+        .attr(`d`,valueline);
     }
-    
-    //Add total chart
+
 });
 
 function generateDescription(d){
@@ -79,13 +67,12 @@ function generateDescription(d){
     document.getElementById("year").innerText=`年份: ${d['year']}`;
     document.getElementById("type").innerText=`考慮因素: ${d['type']}`;
     document.getElementById("value").innerText=`所佔比率: ${d['value']}`;
-
 }
 
 function generateYAxis(graph,data,height,unit){
     
-    let max= Math.max.apply(Math, data.map(function(o) { return o['value']; }))
-    let min= Math.min.apply(Math, data.map(function(o) { return o['value']; }))
+    let max= Math.max.apply(Math, data.map(function(o) { return o['value']; }));
+    let min= Math.min.apply(Math, data.map(function(o) { return o['value']; }));
 
     let y=d3.scaleLinear().domain([min,max]).range([height,0]);
 
@@ -103,16 +90,16 @@ function generateYAxis(graph,data,height,unit){
     return y;
 }
 
-function generateXAxis(graph,data,width,unit){
+function generateXAxis(graph,data,width,height,unit){
 
-    let max= Math.max.apply(Math, data.map(function(o) { return o['year']; }))
-    let min= Math.min.apply(Math, data.map(function(o) { return o['year']; }))
+    let max= Math.max.apply(Math, data.map(function(o) { return o['year']; }));
+    let min= Math.min.apply(Math, data.map(function(o) { return o['year']; }));
 
     let x=d3.scaleLinear().domain([min,max]).range([0,width-10]);
 
     graph.append(`g`)
         .attr(`class`, `x axis`)
-        .attr(`transform`, `translate(0,` + height + `)`)
+        .attr(`transform`, `translate(0,${height})`)
         .call(d3.axisBottom(x));
 
     graph.append(`g`)
@@ -125,3 +112,14 @@ function generateXAxis(graph,data,width,unit){
     return x;
 }
 
+function generateGraph(format){
+
+    let svg=d3.select(format.name).append(`svg`)
+        .attr(`width`, format.width)
+        .attr(`height`, format.height);
+
+    let graph=svg.append(`g`)
+        .attr(`transform`, `translate(${format.margin.left},${format.margin.top})`);
+
+    return graph;
+}
