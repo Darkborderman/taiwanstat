@@ -1,3 +1,4 @@
+//draw 考慮因素 chart (line graph)
 d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/total-2.csv`, function (error, data) {
 
     if (error) throw error;
@@ -29,12 +30,13 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .on(`mouseenter`,(d)=>{
             console.log(d);
             d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
+            generateDescription(d,graph);
         })
         .on('mouseleave',(d)=>{
             d3.select(d3.event.target).attr('r',Setting.circle.radius);
+            removeDescription();
         })
         .on(`click`,(d)=>{
-            generateDescription(d);
         });
 
     //format data for line
@@ -59,14 +61,46 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .attr("fill","none")
         .attr(`d`,valueline);
     }
+});
+//Draw 薪資表
+d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, function (error, data) {
+    if (error) throw error;
+    else console.log(data);
+
+    if (error) throw error;
+    else console.log(data);
+
+    let graph=generateGraph(Setting.graph2);
+
+    let width=Setting.graph2.innerWidth();
+    let height=Setting.graph2.innerHeight();
+
+    let x=generateXAxis(graph,data,width,height,'年份');
+    let y=generateYAxis(graph,data,height,'比率(%)');
 
 });
 
-function generateDescription(d){
+function generateDescription(d,graph){
 
+    graph.append("text")
+    .attr("id","tooltip")
+    .attr("class",`${d[`type`]}`)
+    .attr("x",d3.event.pageX-200)
+    .attr("y",d3.event.pageY-200)
+    .text(`${d['type']} ${d[`value`]}%`)
+    .transition()
+    .duration(300)
+    .style("opacity",1)
+    .style("text-align","center")
+    console.log(d3.event.pageX);
+    
     document.getElementById("year").innerText=`年份: ${d['year']}`;
     document.getElementById("type").innerText=`考慮因素: ${d['type']}`;
     document.getElementById("value").innerText=`所佔比率: ${d['value']}`;
+}
+
+function removeDescription(){
+    d3.select("#tooltip").remove();
 }
 
 function generateYAxis(graph,data,height,unit){
