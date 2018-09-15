@@ -31,6 +31,9 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             console.log(d);
             d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
             generateDescription(d,graph);
+            document.getElementById("year").innerText=`年份: ${d['year']}`;
+            document.getElementById("type").innerText=`考慮因素: ${d['type']}`;
+            document.getElementById("value").innerText=`所佔比率: ${d['value']}%`;
         })
         .on('mouseleave',(d)=>{
             d3.select(d3.event.target).attr('r',Setting.circle.radius);
@@ -76,8 +79,58 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
     let height=Setting.graph2.innerHeight();
 
     let x=generateXAxis(graph,data,width,height,'年份');
-    let y=generateYAxis(graph,data,height,'比率(%)');
+    let y=generateYAxis(graph,data,height,'薪水(新台幣)');
 
+        //insert data(dot graph)
+
+        graph.append(`g`)
+        .attr(`class`,`dot graph`)
+        .selectAll(`circle`)
+        .data(data)
+        .enter()
+        .append(`circle`)
+        .attr('r',Setting.circle.radius)
+        .attr(`fill`,`lightgray`)
+        .attr(`cx`,(d)=>{return x(d[`year`]);})
+        .attr(`cy`,(d)=>{return y(d[`value`]);})
+        .attr(`class`,(d)=>{
+            return `${d[`year`]} ${d[`type`]}`;
+        })
+        .on(`mouseenter`,(d)=>{
+            console.log(d);
+            d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
+            generateDescription(d,graph);
+            document.getElementById("year2").innerText=`年份: ${d['year']}`;
+            document.getElementById("type2").innerText=`學歷: ${d['type']}`;
+            document.getElementById("value2").innerText=`平均每月薪資: ${d['value']}`;
+        })
+        .on('mouseleave',(d)=>{
+            d3.select(d3.event.target).attr('r',Setting.circle.radius);
+            removeDescription();
+        })
+        .on(`click`,(d)=>{
+        });
+
+        let valueline = d3.line()
+        .x(function(d) { return x(d[`year`]); })
+        .y(function(d) { return y(d[`value`]); });
+
+    let lineData=[];
+    for(let i=0;i<=11;i++) lineData[i]=data.slice(i*5,(i*5)+5);
+
+    // draw line
+    for(let i=0;i<=10;i++)
+    {
+        graph.append(`g`)
+        .attr(`clas`,`line graph`)
+        .data([lineData[i]])
+        .append(`path`)
+        .attr(`class`,(d)=>{
+            return `${d[0][`type`]} line`;
+        })
+        .attr("fill","none")
+        .attr(`d`,valueline);
+    }
 });
 
 function generateDescription(d,graph){
@@ -94,9 +147,6 @@ function generateDescription(d,graph){
     .style("text-align","center")
     console.log(d3.event.pageX);
     
-    document.getElementById("year").innerText=`年份: ${d['year']}`;
-    document.getElementById("type").innerText=`考慮因素: ${d['type']}`;
-    document.getElementById("value").innerText=`所佔比率: ${d['value']}`;
 }
 
 function removeDescription(){
