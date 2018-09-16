@@ -5,15 +5,12 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     else console.log(data);
 
     let graph=generateGraph(Setting.graph1);
-
     let width=Setting.graph1.innerWidth();
     let height=Setting.graph1.innerHeight();
-
     let x=generateXAxis(graph,data,width,height,'年份');
     let y=generateYAxis(graph,data,height,'比率(%)');
 
     //insert data(dot graph)
-
     graph.append(`g`)
         .attr(`class`,`dot graph`)
         .selectAll(`circle`)
@@ -28,16 +25,15 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             return `${d[`year`]} ${d[`type`]}`;
         })
         .on(`mouseenter`,(d)=>{
-            console.log(d);
             d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
-            generateDescription(d,graph);
+            generateTooltip(d,graph,200,200);
             document.getElementById("year").innerText=`年份: ${d['year']}`;
             document.getElementById("type").innerText=`考慮因素: ${d['type']}`;
             document.getElementById("value").innerText=`所佔比率: ${d['value']}%`;
         })
         .on('mouseleave',(d)=>{
             d3.select(d3.event.target).attr('r',Setting.circle.radius);
-            removeDescription();
+            removeTooltip();
         })
         .on(`click`,(d)=>{
         });
@@ -67,22 +63,22 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
 });
 //Draw 薪資表
 d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, function (error, data) {
-    if (error) throw error;
-    else console.log(data);
 
     if (error) throw error;
     else console.log(data);
+    d3.csv(`assets/csv/消費者物價指數及其年增率-整理後.csv`,function(error,cpi){
 
-    let graph=generateGraph(Setting.graph2);
+        if(error) throw error;
+        else console.log(cpi);
+        //let realwage=wage*(100/cpi);
 
-    let width=Setting.graph2.innerWidth();
-    let height=Setting.graph2.innerHeight();
-
-    let x=generateXAxis(graph,data,width,height,'年份');
-    let y=generateYAxis(graph,data,height,'薪水(新台幣)');
-
+        let graph=generateGraph(Setting.graph2);
+        let width=Setting.graph2.innerWidth();
+        let height=Setting.graph2.innerHeight();
+        let x=generateXAxis(graph,data,width,height,'年份');
+        let y=generateYAxis(graph,data,height,'薪水(新台幣)');
+    
         //insert data(dot graph)
-
         graph.append(`g`)
         .attr(`class`,`dot graph`)
         .selectAll(`circle`)
@@ -97,64 +93,67 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
             return `${d[`year`]} ${d[`type`]}`;
         })
         .on(`mouseenter`,(d)=>{
-            console.log(d);
+            generateTooltip(d,graph,100,770);
             d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
-            generateDescription(d,graph);
             document.getElementById("year2").innerText=`年份: ${d['year']}`;
             document.getElementById("type2").innerText=`學歷: ${d['type']}`;
-            document.getElementById("value2").innerText=`平均每月薪資: ${d['value']}`;
+            document.getElementById("value2").innerText=`平均每月薪資: ${d['value']}元`;
+
         })
         .on('mouseleave',(d)=>{
             d3.select(d3.event.target).attr('r',Setting.circle.radius);
-            removeDescription();
+            removeTooltip();
         })
         .on(`click`,(d)=>{
+            for(item in cpi){
+                if(cpi[item][`year`]==d['year']){
+                    let realwage=d[`value`]*(100/cpi[item][`value`]);
+                    document.getElementById("realwage").innerText=`真實薪資=${Math.floor(realwage)}元`;
+                    break;
+                }
+            }
         });
-
+    
         let valueline = d3.line()
         .x(function(d) { return x(d[`year`]); })
         .y(function(d) { return y(d[`value`]); });
-
-    let lineData=[];
-    for(let i=0;i<=11;i++) lineData[i]=data.slice(i*5,(i*5)+5);
-
-    // draw line
-    for(let i=0;i<=10;i++)
-    {
-        graph.append(`g`)
-        .attr(`clas`,`line graph`)
-        .data([lineData[i]])
-        .append(`path`)
-        .attr(`class`,(d)=>{
-            return `${d[0][`type`]} line`;
-        })
-        .attr("fill","none")
-        .attr(`d`,valueline);
-    }
+    
+        let lineData=[];
+        for(let i=0;i<=5;i++) lineData[i]=data.slice(i*5,(i*5)+5);
+    
+        // draw line
+        for(let i=0;i<=5;i++)
+        {
+            graph.append(`g`)
+            .attr(`clas`,`line graph`)
+            .data([lineData[i]])
+            .append(`path`)
+            .attr(`class`,(d)=>{
+                return `${d[0][`type`]} line`;
+            })
+            .attr("fill","none")
+            .attr(`d`,valueline);
+        }
+    });
 });
 
-function generateDescription(d,graph){
+function generateTooltip(d,graph,offsetX,offsetY){
 
     graph.append("text")
     .attr("id","tooltip")
     .attr("class",`${d[`type`]}`)
-    .attr("x",d3.event.pageX-200)
-    .attr("y",d3.event.pageY-200)
+    .attr("x",d3.event.pageX-offsetX)
+    .attr("y",d3.event.pageY-offsetY)
     .text(`${d['type']} ${d[`value`]}%`)
-    .transition()
-    .duration(300)
-    .style("opacity",1)
-    .style("text-align","center")
-    console.log(d3.event.pageX);
-    
+    .style("text-align","center");
 }
 
-function removeDescription(){
+function removeTooltip(){
     d3.select("#tooltip").remove();
 }
 
 function generateYAxis(graph,data,height,unit){
-    
+
     let max= Math.max.apply(Math, data.map(function(o) { return o['value']; }));
     let min= Math.min.apply(Math, data.map(function(o) { return o['value']; }));
 
