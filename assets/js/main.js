@@ -7,8 +7,8 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     let graph=generateGraph(Setting.graph1);
     let width=Setting.graph1.innerWidth();
     let height=Setting.graph1.innerHeight();
-    let x=generateXAxis(graph,data,width,height,'年份');
-    let y=generateYAxis(graph,data,height,'比率(%)');
+    let x=generateXAxis(graph,data,width,height,`年份`);
+    let y=generateYAxis(graph,data,height,`比率(%)`);
 
     //insert data(dot graph)
     graph.append(`g`)
@@ -17,7 +17,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .data(data)
         .enter()
         .append(`circle`)
-        .attr('r',Setting.circle.radius)
+        .attr(`r`,Setting.circle.radius)
         .attr(`fill`,`lightgray`)
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);})
@@ -25,14 +25,14 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             return `${d[`year`]} ${d[`type`]}`;
         })
         .on(`mouseenter`,(d)=>{
-            d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
+            d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
             generateTooltip(d,graph,200,200);
-            document.getElementById("year").innerText=`年份: ${d['year']}`;
-            document.getElementById("type").innerText=`考慮因素: ${d['type']}`;
-            document.getElementById("value").innerText=`所佔比率: ${d['value']}%`;
+            document.getElementById(`year`).innerText=`年份: ${d[`year`]}`;
+            document.getElementById(`type`).innerText=`考慮因素: ${d[`type`]}`;
+            document.getElementById(`value`).innerText=`所佔比率: ${d[`value`]}%`;
         })
-        .on('mouseleave',(d)=>{
-            d3.select(d3.event.target).attr('r',Setting.circle.radius);
+        .on(`mouseleave`,(d)=>{
+            d3.select(d3.event.target).attr(`r`,Setting.circle.radius);
             removeTooltip();
         })
         .on(`click`,(d)=>{
@@ -57,7 +57,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .attr(`class`,(d)=>{
             return `${d[0][`type`]} line`;
         })
-        .attr("fill","none")
+        .attr(`fill`,`none`)
         .attr(`d`,valueline);
     }
 });
@@ -75,8 +75,8 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         let graph=generateGraph(Setting.graph2);
         let width=Setting.graph2.innerWidth();
         let height=Setting.graph2.innerHeight();
-        let x=generateXAxis(graph,data,width,height,'年份');
-        let y=generateYAxis(graph,data,height,'薪水(新台幣)');
+        let x=generateXAxis(graph,data,width,height,`年份`);
+        let y=generateYAxis(graph,data,height,`薪水(新台幣)`);
     
         //insert data(dot graph)
         graph.append(`g`)
@@ -85,7 +85,7 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         .data(data)
         .enter()
         .append(`circle`)
-        .attr('r',Setting.circle.radius)
+        .attr(`r`,Setting.circle.radius)
         .attr(`fill`,`lightgray`)
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);})
@@ -94,21 +94,21 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         })
         .on(`mouseenter`,(d)=>{
             generateTooltip(d,graph,100,770);
-            d3.select(d3.event.target).attr('r',Setting.circle.radius*1.5);
-            document.getElementById("year2").innerText=`年份: ${d['year']}`;
-            document.getElementById("type2").innerText=`學歷: ${d['type']}`;
-            document.getElementById("value2").innerText=`平均每月薪資: ${d['value']}元`;
+            d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
+            document.getElementById(`year2`).innerText=`年份: ${d[`year`]}`;
+            document.getElementById(`type2`).innerText=`學歷: ${d[`type`]}`;
+            document.getElementById(`value2`).innerText=`平均每月薪資: ${d[`value`]}元`;
 
         })
-        .on('mouseleave',(d)=>{
-            d3.select(d3.event.target).attr('r',Setting.circle.radius);
+        .on(`mouseleave`,(d)=>{
+            d3.select(d3.event.target).attr(`r`,Setting.circle.radius);
             removeTooltip();
         })
         .on(`click`,(d)=>{
             for(item in cpi){
-                if(cpi[item][`year`]==d['year']){
+                if(cpi[item][`year`]==d[`year`]){
                     let realwage=d[`value`]*(100/cpi[item][`value`]);
-                    document.getElementById("realwage").innerText=`真實薪資=${Math.floor(realwage)}元`;
+                    document.getElementById(`realwage`).innerText=`真實薪資=${Math.floor(realwage)}元`;
                     break;
                 }
             }
@@ -131,7 +131,7 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
             .attr(`class`,(d)=>{
                 return `${d[0][`type`]} line`;
             })
-            .attr("fill","none")
+            .attr(`fill`,`none`)
             .attr(`d`,valueline);
         }
     });
@@ -139,23 +139,23 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
 
 function generateTooltip(d,graph,offsetX,offsetY){
 
-    graph.append("text")
-    .attr("id","tooltip")
-    .attr("class",`${d[`type`]}`)
-    .attr("x",d3.event.pageX-offsetX)
-    .attr("y",d3.event.pageY-offsetY)
-    .text(`${d['type']} ${d[`value`]}%`)
-    .style("text-align","center");
+    graph.append(`text`)
+    .attr(`id`,`tooltip`)
+    .attr(`class`,`${d[`type`]}`)
+    .attr(`x`,d3.event.pageX-offsetX)
+    .attr(`y`,d3.event.pageY-offsetY)
+    .text(`${d[`type`]} ${d[`value`]}%`)
+    .style(`text-align`,`center`);
 }
 
 function removeTooltip(){
-    d3.select("#tooltip").remove();
+    d3.select(`#tooltip`).remove();
 }
 
 function generateYAxis(graph,data,height,unit){
 
-    let max= Math.max.apply(Math, data.map(function(o) { return o['value']; }));
-    let min= Math.min.apply(Math, data.map(function(o) { return o['value']; }));
+    let max= Math.max.apply(Math, data.map(function(o) { return o[`value`]; }));
+    let min= Math.min.apply(Math, data.map(function(o) { return o[`value`]; }));
 
     let y=d3.scaleLinear().domain([min,max]).range([height,0]);
 
@@ -175,8 +175,8 @@ function generateYAxis(graph,data,height,unit){
 
 function generateXAxis(graph,data,width,height,unit){
 
-    let max= Math.max.apply(Math, data.map(function(o) { return o['year']; }));
-    let min= Math.min.apply(Math, data.map(function(o) { return o['year']; }));
+    let max= Math.max.apply(Math, data.map(function(o) { return o[`year`]; }));
+    let min= Math.min.apply(Math, data.map(function(o) { return o[`year`]; }));
 
     let x=d3.scaleLinear().domain([min,max]).range([0,width-10]);
 

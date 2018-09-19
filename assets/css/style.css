@@ -1,5 +1,9 @@
-html{
-    background: lavender;
+body{
+    background: #f7f7f7;
+}
+
+header{
+    width:100%;
 }
 
 #description{
