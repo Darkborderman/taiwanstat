@@ -11,10 +11,10 @@ header{
     width:50%;
     height:50%;
     border-radius:12px;
-    border-color:black;
+    border-color:#666666;
     border-style: solid;
     border-width:2px;
-    background:lightblue;
+    background:lightgray;
 }
 article {
     text-align:center;
@@ -31,7 +31,7 @@ svg{
     background: #f0f0f0;
     color:#666666;
     border:2px;
-    border-color: steelblue;
+    border-color: #666666;
     border-style: solid;
     margin:10px;
 }

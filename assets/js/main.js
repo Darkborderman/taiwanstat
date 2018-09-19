@@ -26,7 +26,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         })
         .on(`mouseenter`,(d)=>{
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
-            generateTooltip(d,graph,200,200);
+            generateTooltip(d,graph,200,380,'%');
             document.getElementById(`year`).innerText=`年份: ${d[`year`]}`;
             document.getElementById(`type`).innerText=`考慮因素: ${d[`type`]}`;
             document.getElementById(`value`).innerText=`所佔比率: ${d[`value`]}%`;
@@ -93,18 +93,13 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
             return `${d[`year`]} ${d[`type`]}`;
         })
         .on(`mouseenter`,(d)=>{
-            generateTooltip(d,graph,100,770);
+            generateTooltip(d,graph,200,1000,'元');
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
             document.getElementById(`year2`).innerText=`年份: ${d[`year`]}`;
-            document.getElementById(`type2`).innerText=`學歷: ${d[`type`]}`;
+            if(d[`type`]==`平均薪資`) document.getElementById(`type2`).innerText=``;
+            else document.getElementById(`type2`).innerText=`學歷: ${d[`type`]}`;
             document.getElementById(`value2`).innerText=`平均每月薪資: ${d[`value`]}元`;
 
-        })
-        .on(`mouseleave`,(d)=>{
-            d3.select(d3.event.target).attr(`r`,Setting.circle.radius);
-            removeTooltip();
-        })
-        .on(`click`,(d)=>{
             for(item in cpi){
                 if(cpi[item][`year`]==d[`year`]){
                     let realwage=d[`value`]*(100/cpi[item][`value`]);
@@ -112,6 +107,12 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
                     break;
                 }
             }
+        })
+        .on(`mouseleave`,(d)=>{
+            d3.select(d3.event.target).attr(`r`,Setting.circle.radius);
+            removeTooltip();
+        })
+        .on(`click`,(d)=>{
         });
     
         let valueline = d3.line()
@@ -137,14 +138,14 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
     });
 });
 
-function generateTooltip(d,graph,offsetX,offsetY){
+function generateTooltip(d,graph,offsetX,offsetY,unit){
 
     graph.append(`text`)
     .attr(`id`,`tooltip`)
     .attr(`class`,`${d[`type`]}`)
     .attr(`x`,d3.event.pageX-offsetX)
     .attr(`y`,d3.event.pageY-offsetY)
-    .text(`${d[`type`]} ${d[`value`]}%`)
+    .text(`${d[`type`]} ${d[`value`]} ${unit}`)
     .style(`text-align`,`center`);
 }
 
