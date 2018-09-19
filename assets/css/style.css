@@ -12,6 +12,9 @@ html{
     border-width:2px;
     background:lightblue;
 }
+article {
+    text-align:center;
+}
 
 input {
     width:50%;
