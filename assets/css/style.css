@@ -48,13 +48,13 @@ main{
 
 /* Graph display*/
 /* for graph 1*/
-.能學以致用的工作{
+.能學以致用{
     stroke:darkcyan;
 }
-.能學習到知識技能{
+.能學習到知識{
     stroke:darkgreen;
 }
-.工作穩定性{
+.工作穩定{
     stroke:darkgoldenrod;
 }
 .有發展前景{
@@ -66,7 +66,7 @@ main{
 .通勤方便{
     stroke:darkred;
 }
-.符合自己興趣的工作{
+.符合自己興趣{
     stroke:darkkhaki
 }
 .工作負擔較輕{

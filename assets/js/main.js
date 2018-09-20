@@ -26,7 +26,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         })
         .on(`mouseenter`,(d)=>{
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
-            generateTooltip(d,graph,200,380,'%');
+            generateTooltip(d,graph,x,y,'%');
             document.getElementById(`year`).innerText=`年份: ${d[`year`]}`;
             document.getElementById(`type`).innerText=`考慮因素: ${d[`type`]}`;
             document.getElementById(`value`).innerText=`所佔比率: ${d[`value`]}%`;
@@ -93,7 +93,7 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
             return `${d[`year`]} ${d[`type`]}`;
         })
         .on(`mouseenter`,(d)=>{
-            generateTooltip(d,graph,200,1000,'元');
+            generateTooltip(d,graph,x,y,'元');
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
             document.getElementById(`year2`).innerText=`年份: ${d[`year`]}`;
             if(d[`type`]==`平均薪資`) document.getElementById(`type2`).innerText=``;
@@ -138,13 +138,13 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
     });
 });
 
-function generateTooltip(d,graph,offsetX,offsetY,unit){
+function generateTooltip(d,graph,x,y,unit){
 
     graph.append(`text`)
     .attr(`id`,`tooltip`)
     .attr(`class`,`${d[`type`]}`)
-    .attr(`x`,d3.event.pageX-offsetX)
-    .attr(`y`,d3.event.pageY-offsetY)
+    .attr(`x`,()=>{return x(d[`year`])+10})
+    .attr(`y`,()=>{return y(d[`value`])+10})
     .text(`${d[`type`]} ${d[`value`]} ${unit}`)
     .style(`text-align`,`center`);
 }
