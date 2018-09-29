@@ -36,6 +36,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             removeTooltip();
         })
         .on(`click`,(d)=>{
+            generateInnergraph();
         });
 
     //format data for line
@@ -206,4 +207,19 @@ function generateGraph(format){
         .attr(`transform`, `translate(${format.margin.left},${format.margin.top})`);
 
     return graph;
+}
+
+function generateInnergraph(){
+    d3.select("#inner-display").selectAll("*").remove();
+    let svg=d3.select("#inner-display").append("svg")
+    .attr("width",200)
+    .attr("height",229);
+    let graph=svg.append("g");
+    graph.append("text")
+    .attr("x",20)
+    .attr("y",20)
+    .text(Math.random());
+    console.log("123");
+    return 0;
+
 }
