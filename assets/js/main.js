@@ -4,9 +4,9 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     if (error) throw error;
     else console.log(data);
 
-    let graph=generateGraph(Setting.graph1);
-    let width=Setting.graph1.innerWidth();
-    let height=Setting.graph1.innerHeight();
+    let graph=generateGraph(Setting.graph,`#display`);
+    let width=Setting.graph.innerWidth();
+    let height=Setting.graph.innerHeight();
     let x=generateXAxis(graph,data,width,height,`年份`);
     let y=generateYAxis(graph,data,height,`比率(%)`);
 
@@ -36,7 +36,12 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             removeTooltip();
         })
         .on(`click`,(d)=>{
-            generateInnergraph();
+            let graphData=[];
+            for(item in data){
+                if(data[item]['year']==d['year']) graphData.push(data[item]);
+            }
+            console.log(graphData);
+            generateInnergraph(graphData);
         });
 
     //format data for line
@@ -73,9 +78,9 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         else console.log(cpi);
         //let realwage=wage*(100/cpi);
 
-        let graph=generateGraph(Setting.graph2);
-        let width=Setting.graph2.innerWidth();
-        let height=Setting.graph2.innerHeight();
+        let graph=generateGraph(Setting.graph,`#display2`);
+        let width=Setting.graph.innerWidth();
+        let height=Setting.graph.innerHeight();
         let x=generateXAxis(graph,data,width,height,`年份`);
         let y=generateYAxis(graph,data,height,`薪水(新台幣)`);
     
@@ -197,9 +202,9 @@ function generateXAxis(graph,data,width,height,unit){
     return x;
 }
 
-function generateGraph(format){
+function generateGraph(format,container){
 
-    let svg=d3.select(format.name).append(`svg`)
+    let svg=d3.select(container).append(`svg`)
         .attr(`width`, format.width)
         .attr(`height`, format.height);
 
@@ -209,17 +214,15 @@ function generateGraph(format){
     return graph;
 }
 
-function generateInnergraph(){
+function generateInnergraph(graphData){
     d3.select("#inner-display").selectAll("*").remove();
-    let svg=d3.select("#inner-display").append("svg")
-    .attr("width",200)
-    .attr("height",229);
-    let graph=svg.append("g");
-    graph.append("text")
-    .attr("x",20)
-    .attr("y",20)
-    .text(Math.random());
-    console.log("123");
+    let graph=generateGraph(Setting.innerGraph,`#inner-display`);
+    let width=Setting.innerGraph.innerWidth();
+    let height=Setting.innerGraph.innerHeight();
+    let x=generateXAxis(graph,graphData,width,height,`year`);
+    let y=generateYAxis(graph,graphData,height,`比率(%)`);
+
+    console.log(graphData);
     return 0;
 
 }
