@@ -24,6 +24,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .attr(`class`,(d)=>{
             return `${d[`year`]} ${d[`type`]}`;
         })
+        //show tooltip when mousehover,remove it when mouseleave
         .on(`mouseenter`,(d)=>{
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
             generateTooltip(d,graph,x,y,'%');
@@ -35,13 +36,16 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius);
             removeTooltip();
         })
+        //generate small graph when click dot
         .on(`click`,(d)=>{
             let graphData=[];
             for(item in data){
                 if(data[item]['year']==d['year']) graphData.push(data[item]);
             }
-            console.log(graphData);
-            generateInnergraph(graphData);
+            graphData.sort(function(a,b){
+                return parseFloat(b[`value`])-parseFloat(a[`value`]);
+            });
+            generateInnergraph(graphData,"#inner-display");
         });
 
     //format data for line
@@ -76,7 +80,6 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
 
         if(error) throw error;
         else console.log(cpi);
-        //let realwage=wage*(100/cpi);
 
         let graph=generateGraph(Setting.graph,`#display2`);
         let width=Setting.graph.innerWidth();
@@ -119,6 +122,15 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
             removeTooltip();
         })
         .on(`click`,(d)=>{
+            let graphData=[];
+            for(item in data){
+                if(data[item]['year']==d['year']) graphData.push(data[item]);
+            }
+            graphData.sort(function(a,b){
+                return parseFloat(b[`value`])-parseFloat(a[`value`]);
+            });
+            generateInnergraph(graphData,"#inner-display2");
+
         });
     
         let valueline = d3.line()
@@ -132,7 +144,7 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         for(let i=0;i<=5;i++)
         {
             graph.append(`g`)
-            .attr(`clas`,`line graph`)
+            .attr(`class`,`line graph`)
             .data([lineData[i]])
             .append(`path`)
             .attr(`class`,(d)=>{
@@ -214,14 +226,35 @@ function generateGraph(format,container){
     return graph;
 }
 
-function generateInnergraph(graphData){
-    d3.select("#inner-display").selectAll("*").remove();
-    let graph=generateGraph(Setting.innerGraph,`#inner-display`);
+function generateInnergraph(graphData,container){
+
+    d3.select(container).selectAll("*").remove();
+    let graph=generateGraph(Setting.innerGraph,container);
     let width=Setting.innerGraph.innerWidth();
     let height=Setting.innerGraph.innerHeight();
-    let x=generateXAxis(graph,graphData,width,height,`year`);
-    let y=generateYAxis(graph,graphData,height,`比率(%)`);
-
+    let max= Math.max.apply(Math, graphData.map(function(o) { return o[`value`]; }));
+    
+    graph.append(`g`)
+    .attr(`class`,`bar graph`)
+    .selectAll(`rect`)
+    .data(graphData)
+    .enter()
+    .append(`rect`)
+    .attr(`width`,40)
+    .attr(`fill`,`white`)
+    .attr('height',(d)=>{return 10+(d[`value`]/max)*300})
+    .attr(`x`,(d,i)=>{return 200-i*20;})
+    .attr(`y`,(d)=>{return 10;})
+    .attr(`class`,(d)=>{
+        return `${d[`year`]} ${d[`type`]}`;
+    })
+    .on(`mouseenter`,(d)=>{
+        d3.select(d3.event.target).attr(`fill`,`lightblue`);
+    })
+    .on(`mouseleave`,(d)=>{
+        d3.select(d3.event.target).attr(`fill`,`white`);
+    })
+    
     console.log(graphData);
     return 0;
 
