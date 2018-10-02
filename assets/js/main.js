@@ -2,7 +2,7 @@
 d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/total-2.csv`, function (error, data) {
 
     if (error) throw error;
-    else console.log(data);
+    //else console.log(data);
 
     let graph=generateGraph(Setting.graph,`#display`);
     let width=Setting.graph.innerWidth();
@@ -25,9 +25,9 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             return `${d[`year`]} ${d[`type`]}`;
         })
         //show tooltip when mousehover,remove it when mouseleave
-        .on(`mouseenter`,(d)=>{
+        .on(`mouseenter`,(d,i)=>{
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
-            generateTooltip(d,graph,x,y,'%');
+            generateTooltip(d,i,graph,x,y,'%');
             document.getElementById(`year`).innerText=`年份: ${d[`year`]}`;
             document.getElementById(`type`).innerText=`考慮因素: ${d[`type`]}`;
             document.getElementById(`value`).innerText=`所佔比率: ${d[`value`]}%`;
@@ -75,11 +75,11 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
 d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, function (error, data) {
 
     if (error) throw error;
-    else console.log(data);
+    //else console.log(data);
     d3.csv(`assets/csv/消費者物價指數及其年增率-整理後.csv`,function(error,cpi){
 
         if(error) throw error;
-        else console.log(cpi);
+        //else console.log(cpi);
 
         let graph=generateGraph(Setting.graph,`#display2`);
         let width=Setting.graph.innerWidth();
@@ -101,21 +101,26 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         .attr(`class`,(d)=>{
             return `${d[`year`]} ${d[`type`]}`;
         })
-        .on(`mouseenter`,(d)=>{
-            generateTooltip(d,graph,x,y,'元');
+        .on(`mouseenter`,(d,i)=>{
+            generateTooltip(d,i,graph,x,y,'元');
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
-            document.getElementById(`year2`).innerText=`年份: ${d[`year`]}`;
-            if(d[`type`]==`平均薪資`) document.getElementById(`type2`).innerText=``;
-            else document.getElementById(`type2`).innerText=`學歷: ${d[`type`]}`;
-            document.getElementById(`value2`).innerText=`平均每月薪資: ${d[`value`]}元`;
 
+            let realwage,currentCPI;
             for(item in cpi){
                 if(cpi[item][`year`]==d[`year`]){
-                    let realwage=d[`value`]*(100/cpi[item][`value`]);
-                    document.getElementById(`realwage`).innerText=`真實薪資=${Math.floor(realwage)}元`;
+                    currentCPI=cpi[item][`value`];
+                    realwage=d[`value`]*(100/cpi[item][`value`]);
                     break;
                 }
             }
+            
+            document.getElementById(`year2`).innerText=`年份: ${d[`year`]}`;
+            if(d[`type`]==`平均薪資`) document.getElementById(`type2`).innerText=``;
+            else document.getElementById(`type2`).innerText=`學歷: ${d[`type`]}`;
+            document.getElementById(`value2`).innerText=`平均每月薪資: ${d[`value`]}元,消費者物價指數:${currentCPI}`;
+            document.getElementById(`realwage`).innerText=`真實薪資=${Math.floor(realwage)}元`;
+            
+            
         })
         .on(`mouseleave`,(d)=>{
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius);
@@ -156,15 +161,30 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
     });
 });
 
-function generateTooltip(d,graph,x,y,unit){
+function generateTooltip(d,index,graph,x,y,unit){
 
-    graph.append(`text`)
-    .attr(`id`,`tooltip`)
-    .attr(`class`,`${d[`type`]}`)
-    .attr(`x`,()=>{return x(d[`year`])+10})
-    .attr(`y`,()=>{return y(d[`value`])+10})
-    .text(`${d[`type`]} ${d[`value`]} ${unit}`)
-    .style(`text-align`,`center`);
+    console.log(index);
+    //out of bound index exception
+   if((graph.name=="#display"&&index%6==5)||(graph.name=="#display2"&&index%5==4))
+    {
+        graph.append(`text`)
+        .attr(`id`,`tooltip`)
+        .attr(`class`,`${d[`type`]}`)
+        .attr(`x`,()=>{return x(d[`year`])-10})
+        .attr(`y`,()=>{return y(d[`value`])+5})
+        .text(`${d[`type`]} ${d[`value`]} ${unit}`)
+        .attr("text-anchor","end")
+        console.log(graph);
+    }
+    else{
+        graph.append(`text`)
+        .attr(`id`,`tooltip`)
+        .attr(`class`,`${d[`type`]}`)
+        .attr(`x`,()=>{return x(d[`year`])+10})
+        .attr(`y`,()=>{return y(d[`value`])+10})
+        .text(`${d[`type`]} ${d[`value`]} ${unit}`)
+    
+    }
 }
 
 function removeTooltip(){
@@ -202,7 +222,7 @@ function generateXAxis(graph,data,width,height,unit){
     graph.append(`g`)
         .attr(`class`, `x axis`)
         .attr(`transform`, `translate(0,${height})`)
-        .call(d3.axisBottom(x));
+        .call(d3.axisBottom(x).ticks(6,""));
 
     graph.append(`g`)
         .attr(`class`, `x unit`)
@@ -222,6 +242,8 @@ function generateGraph(format,container){
 
     let graph=svg.append(`g`)
         .attr(`transform`, `translate(${format.margin.left},${format.margin.top})`);
+
+    graph.name=container;
 
     return graph;
 }
