@@ -35,7 +35,7 @@ let Setting={
         radius:5
     },
     color:{
-        考慮因素:{
+        //category 考慮因素
             能學以致用:"darkcyan",
             能學習到知識:"darkgreen",
             工作穩定:"darkgoldenrod",
@@ -47,14 +47,13 @@ let Setting={
             有挑戰性:"darkseagreen",
             有升遷機會:"darkviolet",
             其他:"darkslateblue",
-        },
-        學歷:{
+        //category 學歷
             碩士及以上:"green",
             大學:"rebeccapurple",
             專科:"goldenrod",
             高中職:"brown",
             國中及以下:"salmon",
             平均薪資:"deeppink",
-        }
+        
     }
 }

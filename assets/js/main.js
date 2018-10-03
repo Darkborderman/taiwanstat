@@ -18,7 +18,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .enter()
         .append(`circle`)
         .attr(`r`,Setting.circle.radius)
-        .attr(`fill`,(d)=>{return Setting.color[`考慮因素`][d.type];})
+        .attr(`fill`,(d)=>{return Setting.color[d.type];})
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);})
         .attr(`class`,(d)=>{return `${d[`year`]} ${d[`type`]}`;})
@@ -66,7 +66,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .attr(`class`,(d)=>{
             return `${d[0][`type`]} line`;
         })
-        .attr(`stroke`,(d)=>{console.log(d); return Setting.color[`考慮因素`][d[0][`type`]]})
+        .attr(`stroke`,(d)=>{console.log(d); return Setting.color[d[0][`type`]]})
         .attr("stroke-width",2)
         .attr("fill","none")
         .attr(`d`,valueline);
@@ -96,7 +96,7 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         .enter()
         .append(`circle`)
         .attr(`r`,Setting.circle.radius)
-        .attr(`fill`,(d)=>{return Setting.color[`學歷`][d.type];})
+        .attr(`fill`,(d)=>{return Setting.color[d.type];})
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);})
         .attr(`class`,(d)=>{
@@ -156,7 +156,7 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
             .attr(`class`,(d)=>{
                 return `${d[0][`type`]} line`;
             })
-            .attr(`stroke`,(d)=>{console.log(d); return Setting.color[`學歷`][d[0][`type`]]})
+            .attr(`stroke`,(d)=>{console.log(d); return Setting.color[d[0][`type`]]})
             .attr("stroke-width",2)
             .attr("fill","none")
             .attr(`d`,valueline);
@@ -174,6 +174,9 @@ function generateTooltip(d,index,graph,x,y,unit){
         .attr(`class`,`${d[`type`]}`)
         .attr(`x`,()=>{return x(d[`year`])-10})
         .attr(`y`,()=>{return y(d[`value`])+5})
+        .style('stroke',()=>{return Setting.color[d.type]})
+        .style('stroke-width', '1px')
+        .attr("fill",()=>{return Setting.color[d.type]})
         .text(`${d[`type`]} ${d[`value`]} ${unit}`)
         .attr("text-anchor","end");
     }
@@ -183,6 +186,9 @@ function generateTooltip(d,index,graph,x,y,unit){
         .attr(`class`,`${d[`type`]}`)
         .attr(`x`,()=>{return x(d[`year`])+10})
         .attr(`y`,()=>{return y(d[`value`])+10})
+        .style('stroke',()=>{return Setting.color[d.type]})
+        .style('stroke-width', '1px')
+        .attr("fill",()=>{return Setting.color[d.type]})
         .text(`${d[`type`]} ${d[`value`]} ${unit}`);
     }
 }
