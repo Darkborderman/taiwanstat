@@ -18,12 +18,10 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .enter()
         .append(`circle`)
         .attr(`r`,Setting.circle.radius)
-        .attr(`fill`,`lightgray`)
+        .attr(`fill`,(d)=>{return Setting.color[`考慮因素`][d.type];})
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);})
-        .attr(`class`,(d)=>{
-            return `${d[`year`]} ${d[`type`]}`;
-        })
+        .attr(`class`,(d)=>{return `${d[`year`]} ${d[`type`]}`;})
         //show tooltip when mousehover,remove it when mouseleave
         .on(`mouseenter`,(d,i)=>{
             d3.select(d3.event.target).attr(`r`,Setting.circle.radius*1.5);
@@ -55,19 +53,22 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .y(function(d) { return y(d[`value`]); });
 
     let lineData=[];
-    for(let i=0;i<=11;i++) lineData[i]=data.slice(i*6,(i*6)+6);
+    for(let i=0;i<=10;i++) lineData[i]=data.slice(i*6,(i*6)+6);
 
+    console.log(lineData);
     // draw line
     for(let i=0;i<=10;i++)
     {
         graph.append(`g`)
-        .attr(`clas`,`line graph`)
+        .attr(`class`,`line graph`)
         .data([lineData[i]])
         .append(`path`)
         .attr(`class`,(d)=>{
             return `${d[0][`type`]} line`;
         })
-        .attr(`fill`,`none`)
+        .attr(`stroke`,(d)=>{console.log(d); return Setting.color[`考慮因素`][d[0][`type`]]})
+        .attr("stroke-width",2)
+        .attr("fill","none")
         .attr(`d`,valueline);
     }
 });
@@ -95,7 +96,7 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         .enter()
         .append(`circle`)
         .attr(`r`,Setting.circle.radius)
-        .attr(`fill`,`lightgray`)
+        .attr(`fill`,(d)=>{return Setting.color[`學歷`][d.type];})
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);})
         .attr(`class`,(d)=>{
@@ -155,7 +156,9 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
             .attr(`class`,(d)=>{
                 return `${d[0][`type`]} line`;
             })
-            .attr(`fill`,`none`)
+            .attr(`stroke`,(d)=>{console.log(d); return Setting.color[`學歷`][d[0][`type`]]})
+            .attr("stroke-width",2)
+            .attr("fill","none")
             .attr(`d`,valueline);
         }
     });
@@ -163,7 +166,6 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
 
 function generateTooltip(d,index,graph,x,y,unit){
 
-    console.log(index);
     //out of bound index exception
    if((graph.name=="#display"&&index%6==5)||(graph.name=="#display2"&&index%5==4))
     {
@@ -173,8 +175,7 @@ function generateTooltip(d,index,graph,x,y,unit){
         .attr(`x`,()=>{return x(d[`year`])-10})
         .attr(`y`,()=>{return y(d[`value`])+5})
         .text(`${d[`type`]} ${d[`value`]} ${unit}`)
-        .attr("text-anchor","end")
-        console.log(graph);
+        .attr("text-anchor","end");
     }
     else{
         graph.append(`text`)
@@ -182,8 +183,7 @@ function generateTooltip(d,index,graph,x,y,unit){
         .attr(`class`,`${d[`type`]}`)
         .attr(`x`,()=>{return x(d[`year`])+10})
         .attr(`y`,()=>{return y(d[`value`])+10})
-        .text(`${d[`type`]} ${d[`value`]} ${unit}`)
-    
+        .text(`${d[`type`]} ${d[`value`]} ${unit}`);
     }
 }
 
@@ -200,7 +200,7 @@ function generateYAxis(graph,data,height,unit){
 
     graph.append(`g`)
         .attr(`class`, `y axis`)
-        .call(d3.axisLeft(y));
+        .call(d3.axisLeft(y).ticks(6));
 
     graph.append(`g`)
         .attr(`class`, `y unit`)

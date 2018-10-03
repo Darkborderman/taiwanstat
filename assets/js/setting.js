@@ -33,5 +33,28 @@ let Setting={
     },
     circle:{
         radius:5
+    },
+    color:{
+        考慮因素:{
+            能學以致用:"darkcyan",
+            能學習到知識:"darkgreen",
+            工作穩定:"darkgoldenrod",
+            有發展前景:"darkmagenta",
+            待遇高:"darksalmon",
+            通勤方便:"darkred",
+            符合自己興趣:"darkred",
+            工作負擔較輕:"darkturquoise",
+            有挑戰性:"darkseagreen",
+            有升遷機會:"darkviolet",
+            其他:"darkslateblue",
+        },
+        學歷:{
+            碩士及以上:"green",
+            大學:"rebeccapurple",
+            專科:"goldenrod",
+            高中職:"brown",
+            國中及以下:"salmon",
+            平均薪資:"deeppink",
+        }
     }
 }
