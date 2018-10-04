@@ -32,7 +32,24 @@ let Setting={
         },
     },
     circle:{
-        radius:5
+        hover:{
+            radius:10,
+            opacity:1
+        },
+        default:{
+            radius:6,
+            opacity:0.6
+        },
+    },
+    line:{
+        hover:{
+            strokeWidth:2,
+            opacity:0.7,
+        },
+        default:{
+            strokeWidth:2,
+            opacity:0.4,
+        },
     },
     color:{
         //category 考慮因素
