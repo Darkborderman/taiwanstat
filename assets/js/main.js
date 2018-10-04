@@ -12,19 +12,10 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     let y=Linegraph.generateYAxis(graph,data,height,`比率(%)`);
 
     //insert data(dot graph)
-    graph.append(`g`)
-        .attr(`class`,`dot graph`)
-        .selectAll(`circle`)
-        .data(data)
-        .enter()
-        .append(`circle`)
-        .attr(`class`,(d)=>{return `${d[`year`]} ${d[`type`]}`;})
-        .attr(`fill`,(d)=>{return Setting.color[d[`type`]];})
-        .attr(`opacity`,Setting.circle.default.opacity)
-        .attr(`r`,Setting.circle.default.radius)
-        .attr(`cx`,(d)=>{return x(d[`year`]);})
-        .attr(`cy`,(d)=>{return y(d[`value`]);})
-        //show tooltip when mousehover,remove it when mouseleave
+    Linegraph.generateDot(data,graph,x,y);
+
+    //show tooltip when mousehover,remove it when mouseleave
+    graph.selectAll('circle')
         .on(`mouseenter`,(d,i)=>{
             d3.select(d3.event.target)
                 .attr(`r`,Setting.circle.hover.radius)
@@ -52,25 +43,18 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             generateInnergraph(graphData,`#inner-display`);
         });
 
-    let valueline = d3.line()
-        .x(function(d) { return x(d[`year`]); })
-        .y(function(d) { return y(d[`value`]); });
-
+    //format data for line,and draw graph
     let lineData=Linegraph.formatLineData(data);
-    // draw line
-    for(let i=0;i<lineData.typeKind;i++)
-    {
-        graph.append(`g`)
-        .attr(`class`,`line graph`)
-        .data([lineData[i]])
-        .append(`path`)
-        .attr(`class`,(d)=>{return `${d[`type`]} line`;})
-        .attr(`stroke`,(d)=>{return Setting.color[d[`type`]]})
-        .attr(`stroke-width`,Setting.line.default.strokeWidth)
-        .attr(`opacity`,Setting.line.default.opacity)
-        .attr(`fill`,`none`)
-        .attr(`d`,valueline);
-    }
+    Linegraph.generateLine(lineData,graph,x,y);
+
+    graph.selectAll('.line path')
+        .on(`mouseenter`,function(d,i){
+            d3.select(d3.event.target)
+                .attr(`stroke-width`,Setting.line.hover.strokeWidth);
+            console.log(`hover`);
+            return;
+        });
+        
 });
 //Draw 薪資表
 d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, function (error, data) {
@@ -89,77 +73,50 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         let y=Linegraph.generateYAxis(graph,data,height,`薪水(新台幣)`);
     
         //insert data(dot graph)
-        graph.append(`g`)
-        .attr(`class`,`dot graph`)
-        .selectAll(`circle`)
-        .data(data)
-        .enter()
-        .append(`circle`)
-        .attr(`class`,(d)=>{return `${d[`year`]} ${d[`type`]}`;})
-        .attr(`fill`,(d)=>{return Setting.color[d[`type`]];})
-        .attr(`opacity`,Setting.circle.default.opacity)
-        .attr(`r`,Setting.circle.default.radius)
-        .attr(`cx`,(d)=>{return x(d[`year`]);})
-        .attr(`cy`,(d)=>{return y(d[`value`]);})
-        .on(`mouseenter`,(d,i)=>{
-            d3.select(d3.event.target)
-                .attr(`r`,Setting.circle.hover.radius)
-                .attr(`opacity`,Setting.circle.hover.opacity);
-            Linegraph.generateTooltip(d,i,graph,x,y,`元`);
+        Linegraph.generateDot(data,graph,x,y);
+        graph.selectAll(`circle`)
+            .on(`mouseenter`,(d,i)=>{
+                d3.select(d3.event.target)
+                    .attr(`r`,Setting.circle.hover.radius)
+                    .attr(`opacity`,Setting.circle.hover.opacity);
+                Linegraph.generateTooltip(d,i,graph,x,y,`元`);
 
-            //find cpi of current dot to calculate real wage
-            let realwage,currentCPI;
-            for(item in cpi){
-                if(cpi[item][`year`]==d[`year`]){
-                    currentCPI=cpi[item][`value`];
-                    realwage=d[`value`]*(100/cpi[item][`value`]);
-                    break;
+                //find cpi of current dot to calculate real wage
+                let realwage,currentCPI;
+                for(item in cpi){
+                    if(cpi[item][`year`]==d[`year`]){
+                        currentCPI=cpi[item][`value`];
+                        realwage=d[`value`]*(100/cpi[item][`value`]);
+                        break;
+                    }
                 }
-            }
-            
-            document.getElementById(`year2`).innerText=`年份: ${d[`year`]}`;
-            if(d[`type`]==`平均薪資`) document.getElementById(`type2`).innerText=``;
-            else document.getElementById(`type2`).innerText=`學歷: ${d[`type`]}`;
-            document.getElementById(`value2`).innerText=`平均每月薪資: ${d[`value`]}元,消費者物價指數:${currentCPI}`;
-            document.getElementById(`realwage`).innerText=`真實薪資=${Math.floor(realwage)}元`;
-        })
-        .on(`mouseleave`,(d)=>{
-            d3.select(d3.event.target)
-                .attr(`r`,Setting.circle.default.radius)
-                .attr(`opacity`,Setting.circle.default.opacity);
-            Linegraph.removeTooltip();
-        })
-        .on(`click`,(d)=>{
-            let graphData=[];
-            for(item in data){
-                if(data[item][`year`]==d[`year`]) graphData.push(data[item]);
-            }
-            graphData.sort(function(a,b){
-                return parseFloat(b[`value`])-parseFloat(a[`value`]);
+                
+                document.getElementById(`year2`).innerText=`年份: ${d[`year`]}`;
+                if(d[`type`]==`平均薪資`) document.getElementById(`type2`).innerText=``;
+                else document.getElementById(`type2`).innerText=`學歷: ${d[`type`]}`;
+                document.getElementById(`value2`).innerText=`平均每月薪資: ${d[`value`]}元,消費者物價指數:${currentCPI}`;
+                document.getElementById(`realwage`).innerText=`真實薪資=${Math.floor(realwage)}元`;
+            })
+            .on(`mouseleave`,(d)=>{
+                d3.select(d3.event.target)
+                    .attr(`r`,Setting.circle.default.radius)
+                    .attr(`opacity`,Setting.circle.default.opacity);
+                Linegraph.removeTooltip();
+            })
+            .on(`click`,(d)=>{
+                let graphData=[];
+                for(item in data){
+                    if(data[item][`year`]==d[`year`]) graphData.push(data[item]);
+                }
+                graphData.sort(function(a,b){
+                    return parseFloat(b[`value`])-parseFloat(a[`value`]);
+                });
+                generateInnergraph(graphData,`#inner-display2`);
             });
-            generateInnergraph(graphData,`#inner-display2`);
 
-        });
-    
-        let valueline = d3.line()
-        .x(function(d) { return x(d[`year`]); })
-        .y(function(d) { return y(d[`value`]); });
     
         let lineData=Linegraph.formatLineData(data);
-        // draw line
-        for(let i=0;i<lineData.typeKind;i++)
-        {
-            graph.append(`g`)
-            .attr(`class`,`line graph`)
-            .data([lineData[i]])
-            .append(`path`)
-            .attr(`class`,(d)=>{return `${d[`type`]} line`;})
-            .attr(`stroke`,(d)=>{return Setting.color[d[`type`]]})
-            .attr(`stroke-width`,Setting.line.default.strokeWidth)
-            .attr(`opacity`,Setting.line.default.opacity)
-            .attr(`fill`,`none`)
-            .attr(`d`,valueline);
-        }
+        Linegraph.generateLine(lineData,graph,x,y);
     });
 });
 

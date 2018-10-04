@@ -53,6 +53,45 @@ let Linegraph={
     
         return x;
     },
+    //append dot on graph, reutrn dot generated
+    generateDot(data,graph,x,y){
+        graph.append(`g`)
+        .attr(`class`,`dot graph`)
+        .selectAll(`circle`)
+        .data(data)
+        .enter()
+        .append(`circle`)
+        .attr(`class`,(d)=>{return `${d[`year`]} ${d[`type`]}`;})
+        .attr(`fill`,(d)=>{return Setting.color[d[`type`]];})
+        .attr(`opacity`,Setting.circle.default.opacity)
+        .attr(`r`,Setting.circle.default.radius)
+        .attr(`cx`,(d)=>{return x(d[`year`]);})
+        .attr(`cy`,(d)=>{return y(d[`value`]);});
+
+        return;
+    },
+    //append line on graph, return line generated
+    generateLine(lineData,graph,x,y){
+        let valueline = d3.line()
+        .x(function(d) { return x(d[`year`]); })
+        .y(function(d) { return y(d[`value`]); });
+
+        for(let i=0;i<lineData.typeKind;i++)
+        {
+            graph.append(`g`)
+            .attr(`class`,`line graph`)
+            .data([lineData[i]])
+            .append(`path`)
+            .attr(`class`,(d)=>{return `${d[`type`]} line`;})
+            .attr(`stroke`,(d)=>{return Setting.color[d[`type`]]})
+            .attr(`stroke-width`,Setting.line.default.strokeWidth)
+            .attr(`opacity`,Setting.line.default.opacity)
+            .attr(`fill`,`none`)
+            .attr(`d`,valueline);
+        }
+
+        return;
+    },
     //append hint text when hover
     generateTooltip(d,index,graph,x,y,unit){
         //out of bound index exception
@@ -78,7 +117,8 @@ let Linegraph={
             .style('stroke',()=>{return Setting.color[d.type]})
             .style('stroke-width', '1px')
             .attr("fill",()=>{return Setting.color[d.type]})
-            .text(`${d[`type`]} ${d[`value`]} ${unit}`);
+            .text(`${d[`type`]} ${d[`value`]} ${unit}`)
+            .attr(`text-anchor`,`start`);
         }
     },
     //remove hint point when leave
