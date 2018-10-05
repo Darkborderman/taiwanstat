@@ -68,7 +68,7 @@ let Linegraph={
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);});
 
-        return;
+        return graph.selectAll('circle');
     },
     //append line on graph, return line generated
     generateLine(lineData,graph,x,y){
@@ -90,7 +90,7 @@ let Linegraph={
             .attr(`d`,valueline);
         }
 
-        return;
+        return graph.selectAll(`.line path`);
     },
     //append hint text when hover
     generateTooltip(d,index,graph,x,y,unit){

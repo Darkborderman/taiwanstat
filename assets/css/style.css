@@ -1,45 +1,24 @@
 body{
     background: #f7f7f7;
 }
-
-header{
-    width:100%;
-}
-.inner-display{
-    width:50%;
-}
-.inner-description{
-    width:50%;
+.title{
+    text-align:center;
 }
 .caption{
     margin:5px;
     text-align: center;
 }
-
+article {
+    text-align:center;
+}
 .description{
-    margin:10px;
-    padding:10px;
-    width:50%;
-    height:50%;
     border-radius:12px;
     border-color:#666666;
     border-style: solid;
     border-width:2px;
+    margin:10px;
+    padding:10px;
     background:lightgray;
-
-    display: flex;
-    justify-content: flex-start;
-}
-article {
-    text-align:center;
-}
-
-input {
-    width:50%;
-    height:5%;
-}
-#display{
-    margin-left:1%;
 }
 svg{
     background: #f0f0f0;
@@ -50,13 +29,45 @@ svg{
     border-radius: 5px;
     margin:10px;
 }
+#display{
+    margin-left:1%;
+}
 article{
     white-space: pre-wrap;
 }
-main{
-    display: flex;
+span{
+    white-space: pre;
+    padding:10px;
+    margin:10px;
+    font-weight:bold;
+    color:white;
+    visibility: hidden;
+    background-color:black;
+    opacity:0.7;
+    width:80%;
+    border-color:black;
+    border-style:solid;
+    border-radius: 10px;
+    height:auto;
+    position: absolute;
 }
-
-.title{
-    text-align:center;
+@media screen and (min-width: 1024px){
+    .description{
+        width:50%;
+        height:50%;
+        display: flex;
+        justify-content: flex-start;
+    }
+    span{
+        width: 40%;
+    }
+    main{
+        display: flex;
+    }
+    .inner-description{
+        width:70%;
+    }
+    .inner-display{
+        width:30%;
+    }
 }
