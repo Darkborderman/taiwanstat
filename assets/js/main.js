@@ -41,6 +41,12 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     let lineData=Linegraph.formatLineData(data);
     Linegraph.generateLine(lineData,graph,x,y)
         
+    for(i=0;i<lineData.typeKind;i++){
+        let div=document.createElement('div');
+        div.innerHTML=lineData[i].type;
+        div.style.color=Setting.color[lineData[i].type];
+        document.getElementById(`info`).appendChild(div);
+    }
     //append infomation icon svg
     graph.append(`g`).append("image")
     .attr("xlink:href", "assets/svg/info.svg")
@@ -109,5 +115,25 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
 
         let lineData=Linegraph.formatLineData(data);
         Linegraph.generateLine(lineData,graph,x,y);
+            
+        for(i=0;i<lineData.typeKind;i++){
+            let div=document.createElement('div');
+            div.innerHTML=lineData[i].type;
+            div.style.color=Setting.color[lineData[i].type];
+            document.getElementById(`info2`).appendChild(div);
+        }
+        //append infomation icon svg
+        graph.append(`g`).append("image")
+        .attr("xlink:href", "assets/svg/info.svg")
+        .attr("width", 30)
+        .attr("height", 30)
+        .attr(`x`,705)
+        .attr('y',-30)
+            .on(`mouseenter`,()=>{
+                document.getElementById("info2").style.visibility='visible';
+            })
+            .on(`mouseleave`,()=>{
+                document.getElementById(`info2`).style.visibility=`hidden`;
+            })
     });
 });

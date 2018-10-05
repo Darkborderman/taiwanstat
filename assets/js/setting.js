@@ -65,12 +65,11 @@ let Setting={
             有升遷機會:`#ff7c38`,
             其他:`#5e63b6`,
         //category 學歷
-            碩士及以上:`green`,
-            大學:`rebeccapurple`,
-            專科:`goldenrod`,
-            高中職:`brown`,
-            國中及以下:`salmon`,
-            平均薪資:`deeppink`,
-        
+            碩士及以上:`#006400`,
+            大學:`#FF0000`,
+            專科:`#8c82fc`,
+            高中職:`#de95ba`,
+            國中及以下:`#ff7c38`,
+            平均薪資:`#0000FF`,
     }
 }
