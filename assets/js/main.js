@@ -9,6 +9,8 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     let x=Linegraph.generateXAxis(graph,data,width,height,`年份`);
     let y=Linegraph.generateYAxis(graph,data,height,`比率(%)`);
 
+    document.getElementById(`display`).style.cursor=`crosshair`;
+
     //show tooltip when mousehover,remove it when mouseleave
     Linegraph.generateDot(data,graph,x,y)   
         .on(`mouseenter`,(d,i)=>{
@@ -40,26 +42,15 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     //format data for line,and draw graph
     let lineData=Linegraph.formatLineData(data);
     Linegraph.generateLine(lineData,graph,x,y)
-        
-    for(i=0;i<lineData.typeKind;i++){
-        let div=document.createElement('div');
-        div.innerHTML=lineData[i].type;
-        div.style.color=Setting.color[lineData[i].type];
-        document.getElementById(`info`).appendChild(div);
-    }
+
     //append infomation icon svg
-    graph.append(`g`).append("image")
-    .attr("xlink:href", "assets/svg/info.svg")
-    .attr("width", 30)
-    .attr("height", 30)
-    .attr(`x`,705)
-    .attr('y',-30)
+    Linegraph.generateInfo(graph,lineData,`info`)
         .on(`mouseenter`,()=>{
-            document.getElementById("info").style.visibility='visible';
+            document.getElementById(`info`).style.visibility=`visible`;
         })
         .on(`mouseleave`,()=>{
             document.getElementById(`info`).style.visibility=`hidden`;
-        })
+        });
 });
 //Draw 薪資表
 d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, function (error, data) {
@@ -73,7 +64,9 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
         let height=Setting.graph.innerHeight();
         let x=Linegraph.generateXAxis(graph,data,width,height,`年份`);
         let y=Linegraph.generateYAxis(graph,data,height,`薪水(新台幣)`);
-    
+
+        document.getElementById(`display2`).style.cursor=`crosshair`
+
         Linegraph.generateDot(data,graph,x,y)
             .on(`mouseenter`,(d,i)=>{
                 d3.select(d3.event.target)
@@ -113,27 +106,17 @@ d3.csv(`assets/csv/青年勞工現職工作平均每月薪資(fin)/total.csv`, f
                 });
             });
 
+        //generate Line
         let lineData=Linegraph.formatLineData(data);
         Linegraph.generateLine(lineData,graph,x,y);
-            
-        for(i=0;i<lineData.typeKind;i++){
-            let div=document.createElement('div');
-            div.innerHTML=lineData[i].type;
-            div.style.color=Setting.color[lineData[i].type];
-            document.getElementById(`info2`).appendChild(div);
-        }
+        
         //append infomation icon svg
-        graph.append(`g`).append("image")
-        .attr("xlink:href", "assets/svg/info.svg")
-        .attr("width", 30)
-        .attr("height", 30)
-        .attr(`x`,705)
-        .attr('y',-30)
+        Linegraph.generateInfo(graph,lineData,`info2`)
             .on(`mouseenter`,()=>{
-                document.getElementById("info2").style.visibility='visible';
+                document.getElementById(`info2`).style.visibility=`visible`;
             })
             .on(`mouseleave`,()=>{
                 document.getElementById(`info2`).style.visibility=`hidden`;
-            })
+            });
     });
 });

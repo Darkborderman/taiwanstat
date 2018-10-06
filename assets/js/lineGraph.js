@@ -42,7 +42,7 @@ let Linegraph={
         graph.append(`g`)
             .attr(`class`, `x axis`)
             .attr(`transform`, `translate(0,${height})`)
-            .call(d3.axisBottom(x).ticks(6,""));
+            .call(d3.axisBottom(x).ticks(6,``));
     
         graph.append(`g`)
             .attr(`class`, `x unit`)
@@ -68,7 +68,7 @@ let Linegraph={
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);});
 
-        return graph.selectAll('circle');
+        return graph.selectAll(`circle`);
     },
     //append line on graph, return line generated
     generateLine(lineData,graph,x,y){
@@ -95,18 +95,18 @@ let Linegraph={
     //append hint text when hover
     generateTooltip(d,index,graph,x,y,unit){
         //out of bound index exception
-        if((graph.name=="#display"&&index%6==5)||(graph.name=="#display2"&&index%5==4))
+        if((graph.name==`#display`&&index%6==5)||(graph.name==`#display2`&&index%5==4))
         {
             graph.append(`text`)
             .attr(`id`,`tooltip`)
             .attr(`class`,`${d[`type`]}`)
             .attr(`x`,()=>{return x(d[`year`])-10})
             .attr(`y`,()=>{return y(d[`value`])+5})
-            .style('stroke',()=>{return Setting.color[d.type]})
-            .style('stroke-width', '1px')
-            .attr("fill",()=>{return Setting.color[d.type]})
+            .style(`stroke`,()=>{return Setting.color[d.type]})
+            .style(`stroke-width`, `1px`)
+            .attr(`fill`,()=>{return Setting.color[d.type]})
             .text(`${d[`type`]} ${d[`value`]} ${unit}`)
-            .attr("text-anchor","end");
+            .attr(`text-anchor`,`end`);
         }
         else{
             graph.append(`text`)
@@ -114,9 +114,9 @@ let Linegraph={
             .attr(`class`,`${d[`type`]}`)
             .attr(`x`,()=>{return x(d[`year`])+10})
             .attr(`y`,()=>{return y(d[`value`])+10})
-            .style('stroke',()=>{return Setting.color[d.type]})
-            .style('stroke-width', '1px')
-            .attr("fill",()=>{return Setting.color[d.type]})
+            .style(`stroke`,()=>{return Setting.color[d.type]})
+            .style(`stroke-width`, `1px`)
+            .attr(`fill`,()=>{return Setting.color[d.type]})
             .text(`${d[`type`]} ${d[`value`]} ${unit}`)
             .attr(`text-anchor`,`start`);
         }
@@ -138,5 +138,23 @@ let Linegraph={
         lineData.typeLength=typeLength;
         lineData.typeKind=data.length/typeLength;
         return lineData;
+    },
+    //generate info icon on grpah,return info
+    generateInfo(graph,lineData,container){
+        for(i=0;i<lineData.typeKind;i++){
+            let div=document.createElement(`div`);
+            div.innerHTML=lineData[i].type;
+            div.style.color=Setting.color[lineData[i].type];
+            document.getElementById(container).appendChild(div);
+        }
+
+        
+        let info=graph.append(`g`).append(`image`)
+        .attr(`xlink:href`, `assets/svg/info.svg`)
+        .attr(`width`, 30)
+        .attr(`height`, 30)
+        .attr(`x`,705)
+        .attr(`y`,-30);
+        return info;
     },
 }
