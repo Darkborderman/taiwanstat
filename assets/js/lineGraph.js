@@ -148,7 +148,6 @@ let Linegraph={
             document.getElementById(container).appendChild(div);
         }
 
-        
         let info=graph.append(`g`).append(`image`)
         .attr(`xlink:href`, `assets/svg/info.svg`)
         .attr(`width`, 30)
