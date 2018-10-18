@@ -11,7 +11,7 @@ body{
 article {
     text-align:center;
 }
-.description{
+.detail{
     border-radius:12px;
     border-color:#666666;
     border-style: solid;
@@ -52,9 +52,9 @@ article{
     position: absolute;
 }
 @media screen and (min-width: 1024px){
-    .description{
-        width:50%;
-        height:50%;
+    .detail{
+        width:30%;
+        height:100%;
         display: flex;
         justify-content: flex-start;
     }
@@ -64,10 +64,10 @@ article{
     main{
         display: flex;
     }
-    .inner-description{
+    .description{
         width:70%;
     }
-    .inner-display{
+    .stat{
         width:30%;
     }
 }

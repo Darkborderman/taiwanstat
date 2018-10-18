@@ -21,6 +21,7 @@ let Linegraph={
     
         graph.append(`g`)
             .attr(`class`, `y axis`)
+            .attr(`transform`, `translate(-5,0)`)
             .call(d3.axisLeft(y).ticks(6));
     
         graph.append(`g`)
@@ -37,11 +38,11 @@ let Linegraph={
         let max= Math.max.apply(Math, data.map(function(o) { return o[`year`]; }));
         let min= Math.min.apply(Math, data.map(function(o) { return o[`year`]; }));
     
-        let x=d3.scaleLinear().domain([min,max]).range([0,width-10]);
+        let x=d3.scaleLinear().domain([min-0.2,max+0.2]).range([0,width-10]);
     
         graph.append(`g`)
             .attr(`class`, `x axis`)
-            .attr(`transform`, `translate(0,${height})`)
+            .attr(`transform`, `translate(0,${height+2})`)
             .call(d3.axisBottom(x).ticks(6,``));
     
         graph.append(`g`)
@@ -63,8 +64,16 @@ let Linegraph={
         .append(`circle`)
         .attr(`class`,(d)=>{return `${d[`year`]} ${d[`type`]}`;})
         .attr(`fill`,(d)=>{return Setting.color[d[`type`]];})
-        .attr(`opacity`,Setting.circle.default.opacity)
-        .attr(`r`,Setting.circle.default.radius)
+        .attr(`opacity`,(d)=>{
+            if(d[`type`]==`待遇高`||d[`type`]==`工作穩定`||d[`type`]==`工作負擔較輕`)
+            return Setting.circle.strong.default.opacity;
+            else return Setting.circle.normal.default.opacity;
+        })
+        .attr(`r`,(d)=>{
+            if(d[`type`]==`待遇高`||d[`type`]==`工作穩定`||d[`type`]==`工作負擔較輕`)
+            return Setting.circle.strong.default.radius;
+            else return Setting.circle.normal.default.radius;
+        })
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);});
 
@@ -84,8 +93,16 @@ let Linegraph={
             .append(`path`)
             .attr(`class`,(d)=>{return `${d[`type`]} line`;})
             .attr(`stroke`,(d)=>{return Setting.color[d[`type`]]})
-            .attr(`stroke-width`,Setting.line.default.strokeWidth)
-            .attr(`opacity`,Setting.line.default.opacity)
+            .attr(`stroke-width`,(d)=>{
+                if(d[`type`]==`待遇高`||d[`type`]==`工作穩定`||d[`type`]==`工作負擔較輕`)
+                return Setting.line.strong.default.strokeWidth;
+                else return Setting.line.normal.default.strokeWidth;
+            })
+            .attr(`opacity`,(d)=>{
+                if(d[`type`]==`待遇高`||d[`type`]==`工作穩定`||d[`type`]==`工作負擔較輕`)
+                return Setting.line.strong.default.opacity;
+                else return Setting.line.normal.default.opacity;
+            })
             .attr(`fill`,`none`)
             .attr(`d`,valueline);
         }
@@ -95,7 +112,7 @@ let Linegraph={
     //append hint text when hover
     generateTooltip(d,index,graph,x,y,unit){
         //out of bound index exception
-        if((graph.name==`#display`&&index%6==5)||(graph.name==`#display2`&&index%5==4))
+        if((graph.name==`#display`&&index%6==5))
         {
             graph.append(`text`)
             .attr(`id`,`tooltip`)

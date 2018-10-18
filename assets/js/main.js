@@ -15,18 +15,57 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     Linegraph.generateDot(data,graph,x,y)   
         .on(`mouseenter`,(d,i)=>{
             d3.select(d3.event.target)
-                .attr(`r`,Setting.circle.hover.radius)
-                .attr(`opacity`,Setting.circle.hover.opacity);
+                .attr(`r`,(d)=>{
+                    if(d[`type`]==`待遇高`||d[`type`]==`工作穩定`||d[`type`]==`工作負擔較輕`)
+                    return Setting.circle.strong.hover.radius;
+                    else return Setting.circle.normal.hover.radius;
+                })
+                .attr(`opacity`,(d)=>{
+                    if(d[`type`]==`待遇高`||d[`type`]==`工作穩定`||d[`type`]==`工作負擔較輕`)
+                    return Setting.circle.strong.hover.opacity;
+                    else return Setting.circle.normal.hover.opacity;
+                });
             Linegraph.generateTooltip(d,i,graph,x,y,`%`);
             document.getElementById(`year`).innerText=`年份: ${d[`year`]}`;
             document.getElementById(`type`).innerText=`考慮因素: ${d[`type`]}`;
             document.getElementById(`value`).innerText=`所佔比率: ${d[`value`]}%`;
+
+            
+            let result = data.map(item =>{
+                if(d.year==item.year) return item;
+            });
+
+            result=result.filter(item=> {
+                return item != undefined;
+            });
+            console.log(result);
+
+            d3.select(`#stat`).append(`div`)
+                .attr("id","temp-stat");
+            for(item in result){
+                d3.select(`#temp-stat`).append(`div`)
+                .style('color',(d)=>{
+                    return Setting[`color`][result[item].type];
+                })
+                .text(`${result[item].type} ${result[item].value}%`)
+            }
+            
         })
         .on(`mouseleave`,()=>{
             d3.select(d3.event.target)
-                .attr(`r`,Setting.circle.default.radius)
-                .attr(`opacity`,Setting.circle.default.opacity);
+            .attr(`opacity`,(d)=>{
+                if(d[`type`]==`待遇高`||d[`type`]==`工作穩定`||d[`type`]==`工作負擔較輕`)
+                return Setting.circle.strong.default.opacity;
+                else return Setting.circle.normal.default.opacity;
+            })
+            .attr(`r`,(d)=>{
+                if(d[`type`]==`待遇高`||d[`type`]==`工作穩定`||d[`type`]==`工作負擔較輕`)
+                return Setting.circle.strong.default.radius;
+                else return Setting.circle.normal.default.radius;
+            })
             Linegraph.removeTooltip();
+
+            d3.select(`#temp-stat`).remove()
         })
         .on(`click`,()=>{
         });
