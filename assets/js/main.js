@@ -12,8 +12,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     document.getElementById(`display`).style.cursor=`crosshair`;
 
     let yearData=Linegraph.formatYearData(data,'2016');
-
-    console.log(yearData);
+    Linegraph.generateCheckboxEvent(yearData);
 
     //show tooltip when mousehover,remove it when mouseleave
     Linegraph.generateDot(data,graph,x,y)   
@@ -36,7 +35,6 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
 
 
             yearData=Linegraph.formatYearData(data,d.year);
-            console.log(yearData);
 
             d3.select(`#stat`).append(`div`)
                 .attr("id","temp-stat");
@@ -79,4 +77,18 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .on(`mouseleave`,()=>{
             document.getElementById(`info`).style.visibility=`hidden`;
         });
+    
+    for(let i=0;i<=10;i++)
+    {
+        if(document.getElementById(`box-${yearData[i][`type`]}`).checked){
+            d3.selectAll(`.${yearData[i][`type`]}`)
+            .attr('display','block')
+            .attr('opacity',1)
+        }
+        else{
+            d3.selectAll(`.${yearData[i][`type`]}`)
+            .attr('display','none')
+            .attr('opacity',0);
+        }
+    }
 });

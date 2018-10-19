@@ -183,8 +183,25 @@ let Linegraph={
         });
         return result;
     },
-    generateCheckbox(){
-        let x = document.createElement("INPUT");
-        x.setAttribute("type", "checkbox");
+    generateCheckboxEvent(yearData){
+        for(let i=0;i<=10;i++)
+        {
+            d3.select(`#box-${yearData[i][`type`]}`)
+            .on(`click`,()=>{
+                if(document.getElementById(`box-${yearData[i][`type`]}`).checked){
+                    d3.selectAll(`.${yearData[i][`type`]}`)
+                    .attr('display','block')
+                    .attr('opacity',1);
+                }
+                else{
+                    d3.selectAll(`.${yearData[i][`type`]}`)
+                    .attr('display','none')
+                    .attr('opacity',0);
+                }
+                console.log(123);
+            });
+        
+        }
+        console.log(yearData);
     }
 }
