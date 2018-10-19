@@ -11,6 +11,10 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
 
     document.getElementById(`display`).style.cursor=`crosshair`;
 
+    let yearData=Linegraph.formatYearData(data,'2016');
+
+    console.log(yearData);
+
     //show tooltip when mousehover,remove it when mouseleave
     Linegraph.generateDot(data,graph,x,y)   
         .on(`mouseenter`,(d,i)=>{
@@ -30,26 +34,19 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             document.getElementById(`type`).innerText=`考慮因素: ${d[`type`]}`;
             document.getElementById(`value`).innerText=`所佔比率: ${d[`value`]}%`;
 
-            
-            let result = data.map(item =>{
-                if(d.year==item.year) return item;
-            });
 
-            result=result.filter(item=> {
-                return item != undefined;
-            });
-            console.log(result);
+            yearData=Linegraph.formatYearData(data,d.year);
+            console.log(yearData);
 
             d3.select(`#stat`).append(`div`)
                 .attr("id","temp-stat");
-            for(item in result){
+            for(item in yearData){
                 d3.select(`#temp-stat`).append(`div`)
                 .style('color',(d)=>{
-                    return Setting[`color`][result[item].type];
+                    return Setting[`color`][yearData[item].type];
                 })
-                .text(`${result[item].type} ${result[item].value}%`)
+                .text(`${yearData[item].type} ${yearData[item].value}%`)
             }
-            
         })
         .on(`mouseleave`,()=>{
             d3.select(d3.event.target)

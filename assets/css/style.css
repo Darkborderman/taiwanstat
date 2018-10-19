@@ -53,7 +53,7 @@ article{
 }
 @media screen and (min-width: 1024px){
     .detail{
-        width:30%;
+        width:35%;
         height:100%;
         display: flex;
         justify-content: flex-start;
@@ -65,9 +65,13 @@ article{
         display: flex;
     }
     .description{
-        width:70%;
+        width:30%;
     }
     .stat{
         width:30%;
     }
+}
+.checkmenu{
+    display:flex;
+    flex-direction:column;
 }

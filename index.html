@@ -33,18 +33,37 @@
         </div>
 
         <section class="detail" id="detail">
+
             <div id="info" class="info">
 本圖為青年勞工初次尋職時選擇工作的考慮因素折線圖
 用意為當有多種選擇時,青年勞工會以什麼當作最主要的考慮因素
 選項共有11種(選項可複選,故總和比率超過100%)
             </div>
-            <div class="checkmenu" id="checkmenu">checkbox</div>
+
+            <div class="checkmenu" id="checkmenu">
+                <fieldset>
+                    <legend id=checkbox-container >選擇要顯示的線段</legend>
+                    <div><label><input type="checkbox" name="checkbox" value="工作穩定" checked>工作穩定</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="待遇高">待遇高</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="工作負擔較輕">工作負擔較輕</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="有發展前景">有發展前景</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="通勤方便">通勤方便</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="符合自己興趣">符合自己興趣</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="能學以致用">能學以致用</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="能學習到知識">能學習到知識</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="有挑戰性">有挑戰性</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="有升遷機會">有升遷機會</label></div>
+                    <div><label><input type="checkbox" name="checkbox" value="其他">其他</label></div>
+                </fieldset>
+            </div>
+
             <div class="description">
                 <h2>詳細資料</h2>
                 <h3 id="year">年份: </h3>
                 <h4 id="type">考慮因素: </h4>
                 <h4 id="value">所佔比率: </h4>
             </div>
+
             <div class="stat" id="stat"></div>
         </section>
 

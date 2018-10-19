@@ -173,4 +173,18 @@ let Linegraph={
         .attr(`y`,-30);
         return info;
     },
+    formatYearData(data,year){
+        let result = data.map(item =>{
+            if(item[`year`]==year) return item;
+        });
+    
+        result=result.filter(item=> {
+            return item != undefined;
+        });
+        return result;
+    },
+    generateCheckbox(){
+        let x = document.createElement("INPUT");
+        x.setAttribute("type", "checkbox");
+    }
 }
