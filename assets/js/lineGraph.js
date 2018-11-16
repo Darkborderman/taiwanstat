@@ -109,6 +109,23 @@ let Linegraph={
 
         return graph.selectAll(`.line path`);
     },
+    appendbar(allData,data,graph,x,y){
+        console.log(data);
+        graph.append(`g`)
+        .attr('class','bar graph')
+        .selectAll(`rect`)
+        .data(data)
+        .enter()
+        .append(`rect`)
+        .attr("x",(d)=>{ return x(d[`year`])-3})
+        .attr("y",(d)=>{ return 0})
+        .attr("height",303)
+        .attr("width",6)
+        .attr("fill","blue")
+        .attr("opacity",0.2)
+
+        return graph.selectAll(`rect`);
+    },
     //append hint text when hover
     generateTooltip(d,index,graph,x,y,unit){
         //out of bound index exception
@@ -198,10 +215,8 @@ let Linegraph={
                     .attr('display','none')
                     .attr('opacity',0);
                 }
-                console.log(123);
             });
         
         }
-        console.log(yearData);
     }
 }

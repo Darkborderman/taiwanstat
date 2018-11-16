@@ -14,6 +14,26 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     let yearData=Linegraph.formatYearData(data,'2016');
     Linegraph.generateCheckboxEvent(yearData);
 
+    Linegraph.appendbar(data,data.slice(60),graph,x,y)
+    .on(`mouseenter`,()=>{
+        d3.select(d3.event.target)
+            .attr("opacity",0.5)
+        d3.select(`#stat`).append(`div`)
+            .attr("id","temp-stat");
+        for(item in yearData){
+            d3.select(`#temp-stat`).append(`div`)
+            .style('color',(d)=>{
+                return Setting[`color`][yearData[item].type];
+            })
+            .text(`${yearData[item].type} ${yearData[item].value}%`)
+        }
+    })
+    .on(`mouseleave`,()=>{
+        d3.select(d3.event.target)
+            .attr("opacity",0.2)
+        d3.select(`#temp-stat`).remove()
+    })
+
     //show tooltip when mousehover,remove it when mouseleave
     Linegraph.generateDot(data,graph,x,y)   
         .on(`mouseenter`,(d,i)=>{
@@ -65,6 +85,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
         .on(`click`,()=>{
         });
 
+
     //format data for line,and draw graph
     let lineData=Linegraph.formatLineData(data);
     Linegraph.generateLine(lineData,graph,x,y)
@@ -91,4 +112,6 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
             .attr('opacity',0);
         }
     }
+
+
 });
