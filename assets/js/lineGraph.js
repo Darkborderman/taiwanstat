@@ -76,7 +76,7 @@ let Linegraph={
         })
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);});
-
+        
         return graph.selectAll(`circle`);
     },
     //append line on graph, return line generated
@@ -109,7 +109,7 @@ let Linegraph={
 
         return graph.selectAll(`.line path`);
     },
-    appendbar(allData,data,graph,x,y){
+    appendbar(data,graph,x){
         console.log(data);
         graph.append(`g`)
         .attr('class','bar graph')
@@ -117,12 +117,17 @@ let Linegraph={
         .data(data)
         .enter()
         .append(`rect`)
+        .attr('pointer-events', 'none') //prevent trigger mouse event before duration
+        .transition()
+        .duration(1000)
         .attr("x",(d)=>{ return x(d[`year`])-3})
         .attr("y",(d)=>{ return 0})
         .attr("height",303)
         .attr("width",6)
         .attr("fill","blue")
         .attr("opacity",0.2)
+        .transition()
+        .attr('pointer-events','auto');
 
         return graph.selectAll(`rect`);
     },

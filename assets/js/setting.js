@@ -34,21 +34,21 @@ let Setting={
     circle:{
         strong:{
             hover:{
-                radius:10,
+                radius:12,
                 opacity:1
             },
             default:{
-                radius:6,
+                radius:7,
                 opacity:0.7
             },
         },
         normal:{
             hover:{
-                radius:10,
+                radius:12,
                 opacity:0.7
             },
             default:{
-                radius:6,
+                radius:7,
                 opacity:0.4
             },
         }
