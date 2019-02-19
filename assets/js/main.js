@@ -110,7 +110,7 @@ d3.csv(`assets/csv/青年勞工初次尋職時選擇工作的考慮因素(fin)/t
     Linegraph.generateLine(lineData, graph, x, y)
 
     //append infomation icon svg
-    Linegraph.generateInfo(graph, lineData, `info`)
+    Linegraph.generateInfo(graph,width, lineData, `info`)
         .on(`mouseenter`, () => {
             document.getElementById(`info`).style.visibility = `visible`;
         })

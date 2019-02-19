@@ -49,7 +49,7 @@ let Linegraph={
             .attr(`class`, `x unit`)
             .append(`text`)
             .attr(`y`, 310)
-            .attr(`x`, 710)
+            .attr(`x`, width)
             .text(`${unit}`);
     
         return x;
@@ -76,7 +76,7 @@ let Linegraph={
         })
         .attr(`cx`,(d)=>{return x(d[`year`]);})
         .attr(`cy`,(d)=>{return y(d[`value`]);});
-        
+
         return graph.selectAll(`circle`);
     },
     //append line on graph, return line generated
@@ -179,19 +179,18 @@ let Linegraph={
         return lineData;
     },
     //generate info icon on grpah,return info
-    generateInfo(graph,lineData,container){
+    generateInfo(graph,width,lineData,container){
         for(i=0;i<lineData.typeKind;i++){
             let div=document.createElement(`div`);
             div.innerHTML=lineData[i].type;
             div.style.color=Setting.color[lineData[i].type];
             document.getElementById(container).appendChild(div);
         }
-
         let info=graph.append(`g`).append(`image`)
         .attr(`xlink:href`, `assets/svg/info.svg`)
         .attr(`width`, 30)
         .attr(`height`, 30)
-        .attr(`x`,705)
+        .attr(`x`,width)
         .attr(`y`,-30);
         return info;
     },
