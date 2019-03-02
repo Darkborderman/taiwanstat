@@ -180,6 +180,11 @@ let Linegraph={
     },
     //generate info icon on grpah,return info
     generateInfo(graph,width,lineData,container){
+        //clear inner content and re-render
+        document.getElementById(container).innerHTML=
+`本圖為青年勞工初次尋職時選擇工作的考慮因素折線圖
+用意為當有多種選擇時,青年勞工會以什麼當作最主要的考慮因素
+選項共有11種(選項可複選,故總和比率超過100%)`;
         for(i=0;i<lineData.typeKind;i++){
             let div=document.createElement(`div`);
             div.innerHTML=lineData[i].type;
