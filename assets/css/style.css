@@ -21,13 +21,7 @@ article {
     background:lightgray;
 }
 svg{
-    background: #f0f0f0;
-    color:#666666;
-    border:2px;
-    border-color: #666666;
-    border-style: solid;
-    border-radius: 5px;
-    margin:10px;
+
 }
 #display{
     margin-left:1%;
@@ -51,7 +45,9 @@ article{
     height:auto;
     position: absolute;
 }
-@media screen and (min-width: 1024px){
+@media screen and (min-width: 1080px){
+
+
     .detail{
         width:50%;
         height:auto;
@@ -69,6 +65,9 @@ article{
         display: -webkit-box;
         display: -ms-flexbox;
         display: flex;
+        -webkit-box-pack:justify;
+            -ms-flex-pack:justify;
+                justify-content:space-between;
     }
     .description{
         width:30%;
