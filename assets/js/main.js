@@ -16,7 +16,7 @@ function renderGraph() {
         }
 
         //get graph correct width again
-        Setting.graph.width = window.screen.availWidth < 1080 ? window.screen.availWidth : window.screen.availWidth * 0.5;
+        Setting.graph.width = window.screen.width < 1080 ? window.screen.width : window.screen.width * 0.5;
 
         let graph = Linegraph.generateGraph(Setting.graph, `#display`);
 

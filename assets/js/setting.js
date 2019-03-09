@@ -1,6 +1,6 @@
 let Setting={
     graph:{
-        width:window.screen.availWidth<1080?window.screen.availWidth:window.screen.availWidth*0.5,
+        width:window.screen.width<1080?window.screen.width:window.screen.width*0.5,
         height:400,
         margin:{
             top: 50,
